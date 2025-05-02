@@ -1,0 +1,32 @@
+# Maven
+target/
+
+# Java
+*.class
+*.jar
+
+# IDE - Eclipse
+.settings/
+.classpath
+.project
+.factorypath
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# IDE - VS Code
+.vscode/
+
+# Logs
+*.log
+logs/
+
+# Data
+data/
+
+*.zip
+*.exe
+

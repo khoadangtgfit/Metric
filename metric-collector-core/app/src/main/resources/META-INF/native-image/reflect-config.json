@@ -1,0 +1,168 @@
+[
+    {
+        "name": "org.apache.commons.logging.impl.LogFactoryImpl",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allDeclaredMethods": true,
+        "allPublicMethods": true
+    },
+    {
+        "name": "org.apache.commons.logging.impl.SimpleLog",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allDeclaredMethods": true,
+        "allPublicMethods": true
+    },
+    {
+        "name": "org.apache.commons.logging.LogFactory",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allDeclaredMethods": true,
+        "allPublicMethods": true
+    },
+    {
+        "name": "boolean[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "byte[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "char[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "double[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "float[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "int[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "long[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "short[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.math.BigDecimal[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.math.BigInteger[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.lang.Boolean[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.lang.Byte[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.lang.Character[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.lang.Double[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.lang.Float[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.lang.Integer[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.lang.Long[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.lang.Short[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.lang.String[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.lang.Class[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.util.Date[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.util.Calendar[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.io.File[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.sql.Date[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.sql.Time[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.sql.Timestamp[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "java.net.URL[]",
+        "unsafeAllocated": true
+    },
+    {
+        "name": "org.apache.commons.configuration2.PropertiesConfiguration",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allDeclaredMethods": true,
+        "allPublicMethods": true,
+        "allDeclaredFields": true,
+        "allPublicFields": true
+    },
+    {
+        "name": "org.apache.commons.configuration2.BaseConfiguration",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allDeclaredMethods": true,
+        "allPublicMethods": true
+    },
+    {
+        "name": "org.apache.commons.configuration2.XMLConfiguration",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allDeclaredMethods": true,
+        "allPublicMethods": true
+    },
+    {
+        "name": "org.apache.commons.beanutils.ConvertUtilsBean",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allDeclaredMethods": true,
+        "allPublicMethods": true
+    },
+    {
+        "name": "org.apache.commons.configuration2.beanutils.BeanHelper",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allDeclaredMethods": true,
+        "allPublicMethods": true
+    }
+]

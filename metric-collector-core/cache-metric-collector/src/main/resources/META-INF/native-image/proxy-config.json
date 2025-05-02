@@ -1,0 +1,23 @@
+[
+	[
+		"org.apache.commons.configuration2.builder.fluent.FileBasedBuilderParameters"
+	],
+	[
+		"org.apache.commons.configuration2.builder.fluent.Parameters"
+	],
+	[
+		"org.apache.commons.configuration2.builder.fluent.PropertiesBuilderParameters"
+	],
+	[
+		"org.apache.commons.configuration2.builder.BasicBuilderParameters"
+	],
+	[
+		"org.apache.commons.configuration2.builder.fluent.HierarchicalBuilderParameters"
+	],
+	[
+		"org.apache.commons.configuration2.builder.fluent.XMLBuilderParameters"
+	],
+	[
+		"org.apache.commons.configuration2.builder.combined.CombinedBuilderParametersImpl"
+	]
+]
