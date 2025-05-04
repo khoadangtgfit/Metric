@@ -15,7 +15,8 @@ public class PropertyUtil {
     private static final Log LOG = LogFactory.getLog(PropertyUtil.class);
     private static final Map<String, Configuration> CONFIG_CACHE = new ConcurrentHashMap<>();
     private static final String DEFAULT_CONFIG_PATH = "/config";
-    private static final String DEFAULT_CONFIG_FILE = "application.properties"; // Updated for consistency: Extracted constant
+    private static final String DEFAULT_CONFIG_FILE = "application.properties";
+    private static final String BASE_MODULE_PATH = "/metric-collector-core";
 
     public static String getString(String key) {
         return getString(getDefaultConfigFile(), key);
@@ -45,17 +46,14 @@ public class PropertyUtil {
         return config != null ? config.getInt(key, defaultValue) : defaultValue;
     }
 
-    // Added for getMaxBackoffMs support
     public static Long getLong(String key) {
         return getLong(getDefaultConfigFile(), key, null);
     }
 
-    // Added for getMaxBackoffMs support
     public static Long getLong(String filePath, String key) {
         return getLong(filePath, key, null);
     }
 
-    // Added for getMaxBackoffMs support
     public static Long getLong(String filePath, String key, Long defaultValue) {
         Configuration config = getConfiguration(filePath);
         if (config == null) return defaultValue;
@@ -83,27 +81,20 @@ public class PropertyUtil {
 
     private static Configuration getConfiguration(String filePath) {
         return CONFIG_CACHE.computeIfAbsent(filePath, path -> {
-            // Try as absolute file
-            File externalFile = new File(new File("").getAbsolutePath().concat(path));
+            // Base path for metric-collector-core
+            String basePath = new File("").getAbsolutePath() + BASE_MODULE_PATH;
+            // Construct full path to config/application.properties
+            String configPath = basePath + DEFAULT_CONFIG_PATH + "/" + DEFAULT_CONFIG_FILE;
 
-            LOG.info("Attempting to load configuration from: " + externalFile.getAbsolutePath()); // Updated for consistency: Standardized log message
+            File configFile = new File(configPath);
 
-            if (externalFile.exists() && externalFile.canRead()) {
-                return loadFromFile(externalFile);
+            LOG.info("Attempting to load configuration from: " + configFile.getAbsolutePath());
+
+            if (configFile.exists() && configFile.canRead()) {
+                return loadFromFile(configFile);
             }
 
-            // Fallback: try as absolute file
-            String fallbackPath = "/metric-collector-core" + path;
-
-            File fallbackExternalFile = new File(new File("").getAbsolutePath().concat(fallbackPath));
-
-            LOG.info("Attempting to load configuration from fallback: " + fallbackExternalFile.getAbsolutePath()); // Updated for consistency: Standardized log message
-
-            if (fallbackExternalFile.exists() && fallbackExternalFile.canRead()) {
-                return loadFromFile(fallbackExternalFile);
-            }
-
-            LOG.warn("Configuration file not found: " + externalFile.getAbsolutePath() + " or " + fallbackExternalFile.getAbsolutePath()); // Updated for consistency: Improved warning message
+            LOG.warn("Configuration file not found: " + configFile.getAbsolutePath());
             return null;
         });
     }
@@ -114,15 +105,15 @@ public class PropertyUtil {
         try {
             Configurations configs = new Configurations();
             config = configs.properties(file);
-            LOG.info("Successfully loaded configuration from: " + file.getAbsolutePath()); // Updated for consistency: Standardized log message
+            LOG.info("Successfully loaded configuration from: " + file.getAbsolutePath());
         } catch (ConfigurationException ex) {
-            LOG.warn("Failed to load configuration from: " + file.getAbsolutePath(), ex); // Updated for consistency: Standardized log message
+            LOG.warn("Failed to load configuration from: " + file.getAbsolutePath(), ex);
         }
 
         return config;
     }
 
-    private static String getDefaultConfigFile() {
+    public static String getDefaultConfigFile() {
         String configFile = System.getProperty("config.file", DEFAULT_CONFIG_FILE);
         return DEFAULT_CONFIG_PATH + "/" + configFile;
     }

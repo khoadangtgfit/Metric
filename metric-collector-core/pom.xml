@@ -36,7 +36,6 @@
         <module>common</module>
         <module>app</module>
         <module>cache-metric-collector</module>
-        <module>storage</module>
         <module>authentication</module>
     </modules>
 

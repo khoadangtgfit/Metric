@@ -14,4 +14,5 @@ module metric_collector.common {
     exports com.hitachids.metriccollector.common.services;
     exports com.hitachids.metriccollector.common.utils;
     exports com.hitachids.metriccollector.common.exception;
+    exports com.hitachids.metriccollector.common.security;
 }

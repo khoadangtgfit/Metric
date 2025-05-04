@@ -2,14 +2,13 @@ package com.hitachids.metriccollector.storage.service.impl;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.hitachids.metriccollector.auth.security.encryption.CredentialEncryptor;
+import com.hitachids.metriccollector.common.security.CredentialEncryptor;
 import com.hitachids.metriccollector.storage.dto.StorageDTO;
 import com.hitachids.metriccollector.storage.entity.StorageEntity;
 import com.hitachids.metriccollector.storage.mapper.StorageMapper;
@@ -149,13 +148,14 @@ public class StorageServiceImpl implements StorageService {
 				return isStorageUpdated;
 			}
 
-			Map<String, Object> params = new HashMap<>();
+			StorageModel model = new StorageModel();
 
-			params.put("encryptedPassword", credentialEncryptor.encrypt(password));
-			params.put("updatedAt", ZonedDateTime.now(ZoneId.systemDefault()).toLocalDateTime());
-			params.put("updatedBy", "Admin");
+			model.setId(id);
+			model.setEncryptedPassword(credentialEncryptor.encrypt(password));
+			model.setUpdatedAt(ZonedDateTime.now(ZoneId.systemDefault()).toLocalDateTime());
+			model.setUpdatedBy("Admin");
 
-			int affectedRows = storageRepository.updateStorageByParams(id, params);
+			int affectedRows = storageRepository.updateStorage(id, model);
 			isStorageUpdated = affectedRows > 0;
 		} catch (Exception ex) {
 			LOG.error(String.format("Failed to update storage %d: ", id), ex);

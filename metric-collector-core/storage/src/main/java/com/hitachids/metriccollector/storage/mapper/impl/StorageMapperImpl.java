@@ -20,7 +20,7 @@ public class StorageMapperImpl implements StorageMapper {
 			entity.setStorageId(rs.getString("storage_id"));
 			entity.setIpv4ServiceIp(rs.getString("ipv4_service_ip"));
 			entity.setOrganizationId(rs.getString("organization_id"));
-			entity.setUsername(rs.getString("credential_username"));
+			entity.setUserId(rs.getString("credential_userid"));
 			entity.setEncryptedPassword(rs.getString("credential_password"));
 			entity.setCreatedAt(rs.getTimestamp("created_at"));
 			entity.setCreatedBy(rs.getString("created_by"));
@@ -42,7 +42,7 @@ public class StorageMapperImpl implements StorageMapper {
 			model.setStorageId(entity.getStorageId());
 			model.setIpv4ServiceIp(entity.getIpv4ServiceIp());
 			model.setOrganizationId(entity.getOrganizationId());
-			model.setUsername(entity.getUsername());
+			model.setUserId(entity.getUserId());
 			model.setEncryptedPassword(entity.getEncryptedPassword());
 			model.setCreatedBy(entity.getCreatedBy());
 			model.setUpdatedBy(entity.getUpdatedBy());

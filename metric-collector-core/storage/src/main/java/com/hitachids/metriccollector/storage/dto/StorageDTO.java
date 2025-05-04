@@ -22,6 +22,7 @@ public class StorageDTO {
 	@JsonProperty("organization_id")
 	private String organizationId;
 
+	@JsonProperty("credential_userid")
 	private String userId;
 
 	private String password;

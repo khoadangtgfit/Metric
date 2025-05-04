@@ -1,8 +1,7 @@
-package com.hitachids.metriccollector.auth.security.encryption;
+package com.hitachids.metriccollector.common.security;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.Base64;
 import java.util.Properties;
 
@@ -29,12 +28,7 @@ public class KeyProvider {
 		return getSecretKey(DEFAULT_CONFIG_PATH + "/" + configFile);
 	}
 
-	/**
-	 * Get secret key
-	 * 
-	 * @param encodedKey String
-	 * @return SecretKey
-	 */
+
 	public SecretKey getSecretKey(String path) {
 		SecretKey secretKey = null;
 

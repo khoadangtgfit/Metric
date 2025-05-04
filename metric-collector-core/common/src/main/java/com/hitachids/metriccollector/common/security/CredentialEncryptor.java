@@ -1,4 +1,4 @@
-package com.hitachids.metriccollector.auth.security.encryption;
+package com.hitachids.metriccollector.common.security;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;

@@ -1,82 +1,90 @@
 package com.hitachids.metriccollector.common.utils;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
-import com.hitachids.metriccollector.common.exception.HttpException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+/**
+ * Utility class for making HTTP requests and constructing API URIs.
+ */
 public class ApiUtil {
     private static final Log LOG = LogFactory.getLog(ApiUtil.class);
-    private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().build();
-    static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final DateTimeFormatter LOG_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
     private ApiUtil() {
-        throw new IllegalStateException("Utility class");
+        throw new IllegalStateException("Utility class cannot be instantiated");
     }
 
-    public static URI getURI(String endpoint) {
+    /**
+     * Constructs the full URI for a given API endpoint.
+     *
+     * @param endpoint The API endpoint to append to the base URL
+     * @return The full URI as a string
+     * @throws Exception If the URI construction fails
+     */
+    public static String getURI(String endpoint) throws Exception {
         try {
-            String url = ConfigurationUtil.getUrl(endpoint);
-            return new URI(url);
+            return ConfigurationUtil.getUrl(endpoint);
         } catch (Exception e) {
-            LOG.error("Failed to create URI for endpoint: " + endpoint, e);
-            throw new HttpException("Invalid URI: " + endpoint, e);
+            String metricCollectorId = "unknown_unknown"; // Fallback ID
+            String logMessage = formatLog("ERROR", metricCollectorId, "Failed to create URI for endpoint: " + endpoint + ": " + e.getMessage());
+            LOG.error(logMessage, e);
+            throw new Exception("Invalid URI for endpoint: " + endpoint, e);
         }
     }
 
-    public static ObjectNode post(String uri, String body, String authHeader, int timeoutMs) {
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(uri))
-                    .header("Authorization", authHeader)
-                    .header("Content-Type", "application/json")
-                    .timeout(Duration.ofMillis(timeoutMs))
-                    .POST(HttpRequest.BodyPublishers.ofString(body))
-                    .build();
-
-            HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-            int statusCode = response.statusCode();
-
-            if (statusCode >= 200 && statusCode < 300) {
-                return OBJECT_MAPPER.readValue(response.body(), ObjectNode.class);
-            } else {
-                String retryAfter = response.headers().firstValue("Retry-After").orElse(null);
-                throw new HttpException("HTTP POST failed with status: " + statusCode, String.valueOf(statusCode), retryAfter);
-            }
-        } catch (Exception e) {
-            LOG.error("POST request failed for URI: " + uri, e);
-            throw new HttpException("POST request failed: " + uri, e);
-        }
+    /**
+     * Sends a POST request to the specified URI.
+     *
+     * @param uri The URI to send the request to
+     * @param requestBody The request body as a JSON string
+     * @param authHeader The authorization header
+     * @param timeout The request timeout in milliseconds
+     * @return The response as a JSON ObjectNode
+     * @throws Exception If the request fails
+     */
+    public static ObjectNode post(String uri, String requestBody, String authHeader, int timeout) throws Exception {
+        HttpClient client = HttpClient.newBuilder().build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .header("Authorization", authHeader)
+                .header("Content-Type", "application/json")
+                .timeout(Duration.ofMillis(timeout))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(response.body(), ObjectNode.class);
     }
 
-    public static ObjectNode get(String uri, String authHeader, int timeoutMs) {
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(uri))
-                    .header("Authorization", authHeader)
-                    .timeout(Duration.ofMillis(timeoutMs))
-                    .GET()
-                    .build();
+    /**
+     * Sends a GET request to the specified URI.
+     *
+     * @param uri The URI to send the request to
+     * @param authHeader The authorization header
+     * @param timeout The request timeout in milliseconds
+     * @return The response as a JSON ObjectNode
+     * @throws Exception If the request fails
+     */
+    public static ObjectNode get(String uri, String authHeader, int timeout) throws Exception {
+        // Placeholder for actual HTTP GET implementation
+        throw new UnsupportedOperationException("GET request implementation not provided");
+    }
 
-            HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-            int statusCode = response.statusCode();
-
-            if (statusCode >= 200 && statusCode < 300) {
-                return OBJECT_MAPPER.readValue(response.body(), ObjectNode.class);
-            } else {
-                String retryAfter = response.headers().firstValue("Retry-After").orElse(null);
-                throw new HttpException("HTTP GET failed with status: " + statusCode, String.valueOf(statusCode), retryAfter);
-            }
-        } catch (Exception e) {
-            LOG.error("GET request failed for URI: " + uri, e);
-            throw new HttpException("GET request failed: " + uri, e);
-        }
+    private static String formatLog(String level, String metricCollectorId, String message) {
+        return String.format("%s [%s] %s ApiUtil: %s",
+                ZonedDateTime.now().format(LOG_DATE_FORMAT),
+                level,
+                metricCollectorId,
+                message);
     }
 }

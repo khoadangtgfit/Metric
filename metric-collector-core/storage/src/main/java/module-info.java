@@ -11,8 +11,6 @@ module metric_collector.storage {
 
     requires metric_collector.database_manager;
     requires metric_collector.common;
-    requires metric_collector.authentication;
-
     exports com.hitachids.metriccollector.storage.dto;
     exports com.hitachids.metriccollector.storage.entity;
     exports com.hitachids.metriccollector.storage.model;

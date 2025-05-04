@@ -2,9 +2,6 @@ package com.hitachids.metriccollector.storage.repository.impl;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.hitachids.metriccollector.db.repository.impl.CrudRepositoryImpl;
@@ -115,7 +112,7 @@ public class StorageRepositoryImpl
 					stmt.setString(index++, storageModel.getStorageId());
 					stmt.setString(index++, storageModel.getIpv4ServiceIp());
 					stmt.setString(index++, storageModel.getOrganizationId());
-					stmt.setString(index++, storageModel.getUsername());
+					stmt.setString(index++, storageModel.getUserId());
 					stmt.setString(index++, storageModel.getEncryptedPassword());
 					stmt.setTimestamp(index++, Timestamp.valueOf(storageModel.getCreatedAt()));
 					stmt.setString(index++, storageModel.getCreatedBy());
@@ -148,65 +145,10 @@ public class StorageRepositoryImpl
 					stmt.setString(index++, storageModel.getStorageId());
 					stmt.setString(index++, storageModel.getIpv4ServiceIp());
 					stmt.setString(index++, storageModel.getOrganizationId());
-					stmt.setString(index++, storageModel.getUsername());
+					stmt.setString(index++, storageModel.getUserId());
 					stmt.setString(index++, storageModel.getEncryptedPassword());
 					stmt.setTimestamp(index++, Timestamp.valueOf(storageModel.getUpdatedAt()));
 					stmt.setString(index++, storageModel.getUpdatedBy());
-				});
-	}
-
-	@Override
-	public int updateStorageByParams(int id, Map<String, Object> params) throws SQLException {
-		Map<String, String> fieldToColumnMap = Map.of(
-				"storageId", "storage_id",
-				"ipv4ServiceIp", "ipv4_service_ip",
-				"organizationId", "organization_id",
-				"username", "credential_username",
-				"encryptedPassword", "credential_password",
-				"updatedAt", "updated_at",
-				"updatedBy", "updated_by");
-
-		StringBuilder setClauseBuilder = new StringBuilder();
-
-		List<Object> paramValues = new ArrayList<>();
-
-		params.forEach((key, value) -> {
-			if (value != null && fieldToColumnMap.containsKey(key)) {
-
-				if (setClauseBuilder.length() > 0) {
-					setClauseBuilder.append(", ");
-				}
-
-				setClauseBuilder.append(fieldToColumnMap.get(key)).append(" = ?");
-
-				paramValues.add(value);
-			}
-		});
-
-		if (!params.containsKey("updatedAt")) {
-			if (setClauseBuilder.length() > 0) {
-				setClauseBuilder.append(", ");
-			}
-
-			setClauseBuilder.append("updated_at = ?");
-
-			paramValues.add(Timestamp.valueOf(LocalDateTime.now()));
-		}
-
-		StringBuilder sqlBuilder = new StringBuilder("UPDATE storage SET " + setClauseBuilder + " WHERE id = %d");
-
-		return updateEntity(
-				String.format(sqlBuilder.toString(), id),
-				stmt -> {
-					int index = 1;
-
-					for (Object value : paramValues) {
-						if (value instanceof String) {
-							stmt.setString(index++, (String) value);
-						} else if (value instanceof LocalDateTime) {
-							stmt.setTimestamp(index++, Timestamp.valueOf((LocalDateTime) value));
-						}
-					}
 				});
 	}
 

@@ -13,10 +13,8 @@ public interface StorageRepository extends CrudRepository<StorageEntity, Integer
 
 	public StorageEntity fetchStorageByParams(Map<String, Object> params) throws SQLException;
 
-	public StorageEntity insertStorage(StorageModel storageModel) throws SQLException;
+	public StorageEntity insertStorage(StorageModel StorageModel) throws SQLException;
 
-	public int updateStorage(int id, StorageModel storageModel) throws SQLException;
-
-	public int updateStorageByParams(int id, Map<String, Object> params) throws SQLException;
+	public int updateStorage(int id, StorageModel StorageModel) throws SQLException;
 
 }

@@ -4,113 +4,127 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class ConfigurationUtil {
+/**
+ * Utility class for accessing configuration properties with default values
+ * and type-safe retrieval methods.
+ */
+public final class ConfigurationUtil {
+	private static final Log LOGGER = LogFactory.getLog(ConfigurationUtil.class);
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+	// Configuration property keys
 	private static final String DATABASE_PATH = "db.path";
 	private static final String BASE_URL = "base.url";
 	private static final String AUTH_TOKEN_SECRET = "auth.token.secret";
-	private static final String API_REQUEST_TIMEOUT_SECONDS = "api.request.timeout.milliseconds";
+	private static final String API_REQUEST_TIMEOUT_MS = "api.request.timeout.milliseconds";
 	private static final String COLLECTORS_BINARY_PATH = "collectors.binary.path";
 	private static final String COLLECTOR_SCHEDULER_INTERVAL_SECONDS = "collector.scheduler.interval.seconds";
 	private static final String SECURITY_ENCRYPTION_KEY = "security.encryption.key";
 	private static final String MAX_RETRIES = "api.retry.max.attempts";
 	private static final String MAX_BACKOFF_MS = "api.retry.max.backoff.milliseconds";
-	private static final Log LOGGER = LogFactory.getLog(ConfigurationUtil.class);
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+	// Default values as per documentation
+	private static final int DEFAULT_API_TIMEOUT_MS = 1100; // 1.1 seconds
+	private static final int DEFAULT_MAX_RETRIES = 5;
+	private static final long DEFAULT_MAX_BACKOFF_MS = 10000L; // 10 seconds
+
 	private ConfigurationUtil() {
-		throw new IllegalStateException("Utility class");
+		throw new IllegalStateException("Utility class cannot be instantiated");
 	}
 
+	/**
+	 * Gets the database path configuration.
+	 * @return Database path as string
+	 */
 	public static String getDatabasePath() {
-		return getDatabasePath(DATABASE_PATH);
+		return PropertyUtil.getString(DATABASE_PATH);
 	}
 
-	public static String getDatabasePath(String dbPath) {
-		return PropertyUtil.getString(dbPath);
-	}
-
+	/**
+	 * Gets the base URL for API requests.
+	 * @return Base URL as string
+	 */
 	public static String getBaseUrl() {
-		return getBaseUrl(BASE_URL);
+		return PropertyUtil.getString(BASE_URL);
 	}
 
-	public static String getBaseUrl(String baseUrl) {
-		return PropertyUtil.getString(baseUrl);
+	/**
+	 * Constructs a full API URL by appending the endpoint to the base URL.
+	 * @param apiEndpoint The API endpoint to append
+	 * @return Full API URL
+	 */
+	public static String getUrl(String apiEndpoint) {
+		return getBaseUrl() + apiEndpoint;
 	}
 
-	public static String getUrl(String apiEndPoint) {
-		return getUrl(BASE_URL, apiEndPoint);
-	}
-
-	public static String getUrl(String baseUrl, String apiEndPoint) {
-		return PropertyUtil.getString(baseUrl) + apiEndPoint;
-	}
-
+	/**
+	 * Gets the authentication token with Basic prefix.
+	 * @return Authentication token with Basic prefix
+	 */
 	public static String getAuthToken() {
-		return getAuthToken(AUTH_TOKEN_SECRET);
+		return "Basic " + PropertyUtil.getString(AUTH_TOKEN_SECRET);
 	}
 
-	public static String getAuthToken(String authTokenSecret) {
-		return "Basic " + PropertyUtil.getString(authTokenSecret);
+	/**
+	 * Gets the API request timeout in milliseconds.
+	 * @return Timeout in milliseconds
+	 */
+	public static int getTimeout() {
+		return PropertyUtil.getInt(PropertyUtil.getDefaultConfigFile(), API_REQUEST_TIMEOUT_MS, DEFAULT_API_TIMEOUT_MS);
 	}
 
-	public static Integer getTimeout() {
-		return getTimeout(API_REQUEST_TIMEOUT_SECONDS);
-	}
-
-	public static Integer getTimeout(String timeout) {
-		// Default to 1100ms (1.1s) as per document
-		return PropertyUtil.getInt(timeout, String.valueOf(1100));
-	}
-
+	/**
+	 * Gets the directory path for collector binaries.
+	 * @return Collector binaries directory path
+	 */
 	public static String getCollectorBinariesDirectory() {
-		return getCollectorBinariesDirectory(COLLECTORS_BINARY_PATH);
+		return PropertyUtil.getString(COLLECTORS_BINARY_PATH);
 	}
 
-	public static String getCollectorBinariesDirectory(String collectorsBinaryPath) {
-		return PropertyUtil.getString(collectorsBinaryPath);
+	/**
+	 * Gets the collector scheduler interval in seconds.
+	 * @return Scheduler interval in seconds
+	 */
+	public static int getCollectorSchedulerInterval() {
+		return PropertyUtil.getInt(COLLECTOR_SCHEDULER_INTERVAL_SECONDS);
 	}
 
-	public static Integer getCollectorSchedulerInterval() {
-		return getCollectorSchedulerInterval(COLLECTOR_SCHEDULER_INTERVAL_SECONDS);
-	}
-
-	public static Integer getCollectorSchedulerInterval(String collectorSchedulerIntervalSeconds) {
-		return PropertyUtil.getInt(collectorSchedulerIntervalSeconds);
-	}
-
+	/**
+	 * Gets the security encryption key.
+	 * @return Encryption key
+	 */
 	public static String getSecurityEncryptionKey() {
-		return getSecurityEncryptionKey(SECURITY_ENCRYPTION_KEY);
+		return PropertyUtil.getString(SECURITY_ENCRYPTION_KEY);
 	}
 
-	public static String getSecurityEncryptionKey(String securityEncryptionKey) {
-		return PropertyUtil.getString(securityEncryptionKey);
+	/**
+	 * Gets the maximum number of retry attempts for API calls.
+	 * @return Maximum retry attempts
+	 */
+	public static int getMaxRetries() {
+		return PropertyUtil.getInt(PropertyUtil.getDefaultConfigFile(), MAX_RETRIES, DEFAULT_MAX_RETRIES);
 	}
 
-	public static Integer getMaxRetries() {
-		return getMaxRetries(MAX_RETRIES);
+	/**
+	 * Gets the maximum backoff time for retry attempts in milliseconds.
+	 * @return Maximum backoff time in milliseconds
+	 */
+	public static long getMaxBackoffMs() {
+		return PropertyUtil.getLong(PropertyUtil.getDefaultConfigFile(), MAX_BACKOFF_MS, DEFAULT_MAX_BACKOFF_MS);
 	}
 
-	public static Integer getMaxRetries(String maxRetries) {
-		// Default to 5 as per document
-		return PropertyUtil.getInt(maxRetries, String.valueOf(5));
-	}
-
-	public static Integer getMaxRetries(int defaultValue) {
-		return PropertyUtil.getInt(MAX_RETRIES, String.valueOf(defaultValue));
-	}
-
-	public static Long getMaxBackoffMs() {
-		return getMaxBackoffMs(MAX_BACKOFF_MS);
-	}
-
-	public static Long getMaxBackoffMs(String maxBackoffMs) {
-		// Default to 10000ms (10s)
-		return PropertyUtil.getLong(maxBackoffMs, String.valueOf(10000L));
-	}
-
+	/**
+	 * Gets the logger instance for the metric collector package.
+	 * @return Logger instance
+	 */
 	public static Log getLogger() {
-		return LogFactory.getLog("com.hitachids.metriccollector");
+		return LOGGER;
 	}
 
+	/**
+	 * Gets the shared ObjectMapper instance.
+	 * @return ObjectMapper instance
+	 */
 	public static ObjectMapper getObjectMapper() {
 		return OBJECT_MAPPER;
 	}
