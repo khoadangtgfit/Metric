@@ -53,17 +53,24 @@ public class ApiUtil {
      * @throws Exception If the request fails
      */
     public static ObjectNode post(String uri, String requestBody, String authHeader, int timeout) throws Exception {
-        HttpClient client = HttpClient.newBuilder().build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
-                .header("Authorization", authHeader)
-                .header("Content-Type", "application/json")
-                .timeout(Duration.ofMillis(timeout))
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(response.body(), ObjectNode.class);
+        try {
+            HttpClient client = HttpClient.newBuilder().build();
+            System.out.println(client);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(uri))
+                    .header("Authorization", authHeader)
+                    .header("Content-Type", "application/json")
+                    .timeout(Duration.ofMillis(timeout))
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.body(), ObjectNode.class);
+        } catch (Exception e) {
+            System.err.println("Error in ApiUtil.post: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -76,9 +83,26 @@ public class ApiUtil {
      * @throws Exception If the request fails
      */
     public static ObjectNode get(String uri, String authHeader, int timeout) throws Exception {
-        // Placeholder for actual HTTP GET implementation
-        throw new UnsupportedOperationException("GET request implementation not provided");
+        try {
+            HttpClient client = HttpClient.newBuilder().build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(uri))
+                    .header("Authorization", authHeader)
+                    .header("Content-Type", "application/json")
+                    .timeout(Duration.ofMillis(timeout))
+                    .GET()
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.body(), ObjectNode.class);
+        } catch (Exception e) {
+            System.err.println("Error in ApiUtil.get: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
     private static String formatLog(String level, String metricCollectorId, String message) {
         return String.format("%s [%s] %s ApiUtil: %s",
